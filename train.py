@@ -202,7 +202,7 @@ class EarlyStopping:
 
 def positional_encoding(num_nodes, d_model, device):
     if d_model % 2 != 0:
-        raise ValueError("位置编码维度 d_model 必须为偶数")
+        raise ValueError("The embedding dimension (d_model) must be even.")
 
     pe = torch.zeros(num_nodes, d_model, device=device)
     position = torch.arange(0, num_nodes, dtype=torch.float, device=device).unsqueeze(1)
@@ -509,12 +509,10 @@ def train(train_path, valid_path, out, assembler, overfit=False, dropout=None, s
     if dropout is None:
         dropout = hyperparameters["dropout"]
 
-    # 验证 / symmetry 一律用普通 BCE，保持验证稳定
     edge_criterion = lambda logits, labels: F.binary_cross_entropy_with_logits(
         logits, labels.float()
     )
 
-    # 训练主分类损失
     if use_asl:
         train_cls_criterion = AsymmetricLoss(
             gamma_pos=asl_gamma_pos,
@@ -611,7 +609,7 @@ def train(train_path, valid_path, out, assembler, overfit=False, dropout=None, s
 
     if model_type in ["dualbranch", "wo_mamba", "full"] and hidden_features % 8 != 0:
         raise ValueError(
-            f"hidden_features={hidden_features} 不能被 Transformer 的 num_heads=8 整除"
+            f"hidden_features={hidden_features} must be divisible by the number of attention heads (num_heads=8)"
         )
 
     if not os.path.exists(models_path):
