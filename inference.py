@@ -29,7 +29,7 @@ early_stopping = False
 def positional_encoding(num_nodes, d_model, device):
 
     if d_model % 2 != 0:
-        raise ValueError("位置编码维度 d_model 必须为偶数")
+        raise ValueError("The embedding dimension (d_model) must be even.")
 
     pe = torch.zeros(num_nodes, d_model, device=device)
     position = torch.arange(0, num_nodes, dtype=torch.float, device=device).unsqueeze(1)
@@ -44,7 +44,7 @@ def positional_encoding(num_nodes, d_model, device):
 def positional_encoding_from_node_ids(node_ids, d_model, device):
   
     if d_model % 2 != 0:
-        raise ValueError("位置编码维度 d_model 必须为偶数")
+        raise ValueError("The embedding dimension (d_model) must be even.")
 
     node_ids = node_ids.to(device=device, dtype=torch.float32).unsqueeze(1)
 
