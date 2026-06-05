@@ -47,7 +47,7 @@ class AssemblyGraphDataset(DGLDataset):
 
         if not generate:
             if not os.path.isdir(self.save_dir):
-                print(f"[WARN] save_dir 不存在或不可访问: {self.save_dir}")
+                print(f"[WARN] save_dir does not exist or is inaccessible: {self.save_dir}")
             else:
                 for file in os.listdir(self.save_dir):
                    
@@ -56,7 +56,7 @@ class AssemblyGraphDataset(DGLDataset):
 
                     m = re.match(r"(\d+)\.dgl$", file)
                     if not m:
-                        print(f"[WARN] 忽略无法解析为索引的文件: {file}")
+                        print(f"[WARN] Ignoring file that cannot be parsed as an index: {file}")
                         continue
                     idx = int(m.group(1))
 
@@ -151,7 +151,7 @@ class AssemblyGraphDataset_HiFi(AssemblyGraphDataset):
             elif assembler == 'hifiasm':
                 write_paf = False
                 if not os.path.exists(reads_path):
-                    raise FileNotFoundError(f"hifiasm 输入文件不存在: {reads_path}")
+                    raise FileNotFoundError(f"hifiasm input file does not exist: {reads_path}")
                 
                 if write_paf:
                     subprocess.run(
@@ -177,7 +177,7 @@ class AssemblyGraphDataset_HiFi(AssemblyGraphDataset):
                     
                     possible_gfas = [f for f in os.listdir(self.output_dir) if f.startswith(f'{idx}_asm') and f.endswith('.gfa')]
                     if not possible_gfas:
-                        raise FileNotFoundError(f"hifiasm 未生成 GFA 文件，输出目录: {self.output_dir}")
+                        raise FileNotFoundError(f"hifiasm failed to generate GFA files in output directory: {self.output_dir}")
                     expected_gfa = possible_gfas[0]  
                 
                 subprocess.run(f'mv {expected_gfa} {idx}_raw_graph.gfa', shell=True, cwd=self.output_dir, check=True)
@@ -188,7 +188,7 @@ class AssemblyGraphDataset_HiFi(AssemblyGraphDataset):
                 if contig_gfa not in os.listdir(self.output_dir):
                     possible_contig_gfas = [f for f in os.listdir(self.output_dir) if f.startswith(f'{idx}_asm') and 'p_ctg.gfa' in f]
                     if not possible_contig_gfas:
-                        raise FileNotFoundError(f"未找到 contig GFA 文件，输出目录: {self.output_dir}")
+                        raise FileNotFoundError(f"Contig GFA file not found in output directory: {self.output_dir}")
                     contig_gfa = possible_contig_gfas[0]
               
                 extract_hifiasm_contigs(self.output_dir, idx)
