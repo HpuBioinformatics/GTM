@@ -188,7 +188,7 @@ def generate_graphs_hifi(datadir_path, chr_dict, assembler, threads):
                     chr_sim_path, assembler=assembler, threads=threads, generate=True, n_need=n_need
                 )
             else:
-                raise ValueError(f"不支持的组装器：{assembler}，可选值为 'raven' 或 'hifiasm'")
+                raise ValueError(f"Unsupported assembler: '{assembler}'. Supported options are 'raven' or 'hifiasm'.")
 
 
 
