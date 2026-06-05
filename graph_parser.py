@@ -83,9 +83,10 @@ def only_from_gfa(gfa_path, training=False, reads_path=None, get_similarities=Fa
   
     if training:
         if reads_path is None:
-            raise ValueError("训练模式下必须提供'reads_path'以获取序列头信息！")
+            raise ValueError("'reads_path' must be provided in training mode to retrieve sequence header information!")
        
-        print(f'训练模式：从{reads_path}加载序列头信息...')
+        print(f"Training mode: Loading sequence header information from {reads_path}...")
+        raise ValueError("'reads_path' must be provided in training mode to retrieve sequence header information!")
         if reads_path.endswith('gz'):
             if reads_path.endswith(('fasta.gz', 'fna.gz', 'fa.gz')):
                 filetype = 'fasta'
@@ -99,7 +100,7 @@ def only_from_gfa(gfa_path, training=False, reads_path=None, get_similarities=Fa
             elif reads_path.endswith(('fastq', 'fnq', 'fq')):
                 filetype = 'fastq'
             read_headers = {read.id: read.description for read in SeqIO.parse(reads_path, filetype)}
-        print(f'成功加载{len(read_headers)}条序列头信息')
+        print(f"Successfully loaded {len(read_headers)} sequence headers")
 
     time_start = datetime.now()
     print(f'Starting to loop over GFA')
@@ -204,7 +205,7 @@ def only_from_gfa(gfa_path, training=False, reads_path=None, get_similarities=Fa
                     else:
                        
                         if id not in read_headers:
-                            raise KeyError(f"序列ID '{id}' 未在reads_path中找到！")
+                            raise KeyError(f"Sequence ID '{id}' not found in reads_path!")
                         description = read_headers[id]
                         strand = re.findall(r'strand=(\+|\-)', description)[0]
                         strand = 1 if strand == '+' else -1
@@ -294,7 +295,7 @@ def only_from_gfa(gfa_path, training=False, reads_path=None, get_similarities=Fa
 
    
     if no_seqs_flag and reads_path is not None:
-        print(f'从FASTA/Q文件加载序列...')
+        print(f"Loading sequences from FASTA/FASTQ file...")
         if reads_path.endswith('gz'):
             if reads_path.endswith(('fasta.gz', 'fna.gz', 'fa.gz')):
                 filetype = 'fasta'
@@ -309,25 +310,22 @@ def only_from_gfa(gfa_path, training=False, reads_path=None, get_similarities=Fa
                 filetype = 'fastq'
             fastaq_seqs = {read.id: read.seq for read in SeqIO.parse(reads_path, filetype)}
 
-        print(f'序列加载完成！')
+        print(f"Sequence loading completed!")
         for node_id in tqdm(read_seqs.keys(), ncols=120):
             read_id = node_to_read[node_id]
-            # 处理单元ig的ID列表
             if isinstance(read_id, list):
                 read_id = read_id[0][0]
             seq = fastaq_seqs[read_id]
             read_seqs[node_id] = str(seq if node_id % 2 == 0 else seq.reverse_complement())
-        print(f'DNA序列加载完成！')
+        print(f"DNA sequence loading completed!")
 
    
-    if get_similarities:
-        print(f'计算相似度特征...')
+        if get_similarities:
+        print(f"Computing similarity features...")
         if not edge_ids:
-            # 无边缘时返回空字典
-            print("警告：GFA中未找到边，跳过相似度计算")
+            print("[WARN] No edges found in GFA. Skipping similarity computation.")
             overlap_similarities, edit_distances, prefix_length_ratios = {}, {}, {}
         else:
-            # 计算并存储边特征
             overlap_similarities, edit_distances, prefix_length_ratios = calculate_similarities(
                 edge_ids, read_seqs, overlap_lengths, read_lengths
             )
@@ -335,7 +333,7 @@ def only_from_gfa(gfa_path, training=False, reads_path=None, get_similarities=Fa
                 graph_nx.edges[(src, dst)]['overlap_similarity'] = overlap_similarities[(src, dst)]
                 graph_nx.edges[(src, dst)]['edit_distance'] = edit_distances[(src, dst)]
                 graph_nx.edges[(src, dst)]['prefix_length_ratio'] = prefix_length_ratios[(src, dst)]
-        print(f'相似度计算完成！')
+        print(f"Similarity computation completed!")
 
   
     nx.set_node_attributes(graph_nx, read_lengths, 'read_length')
@@ -383,9 +381,8 @@ def only_from_gfa(gfa_path, training=False, reads_path=None, get_similarities=Fa
     edge_paf_info = {}
     if read_paf and paf_path:
       
-        pass  # 替换原代码中的"..."避免语法错误
+        pass  
 
-    # 构建辅助信息字典
     auxiliary = {
         'pred': predecessors,
         'succ': successors,
