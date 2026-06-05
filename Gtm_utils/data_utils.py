@@ -84,7 +84,7 @@ def preprocess_graph(g):
             raise KeyError(
                 f"Missing edge field g.edata['{key}']. "
                 f"Available edge keys: {list(g.edata.keys())}. "
-                f"请确认生成图时使用了 get_similarities=True。"
+                f"Please ensure that 'get_similarities=True' was used when generating the plot."
             )
 
     # ----------------------
