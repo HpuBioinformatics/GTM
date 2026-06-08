@@ -57,11 +57,9 @@ Requirements.yml
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/GTM.git
+git clone https://github.com/HpuBioinformatics/GTM
 cd GTM
 ```
-
-Replace `YOUR_USERNAME` with your GitHub username or the correct repository owner.
 
 ### 2. Create the Conda Environment
 
