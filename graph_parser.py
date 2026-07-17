@@ -320,7 +320,7 @@ def only_from_gfa(gfa_path, training=False, reads_path=None, get_similarities=Fa
         print(f"DNA sequence loading completed!")
 
    
-        if get_similarities:
+    if get_similarities:
         print(f"Computing similarity features...")
         if not edge_ids:
             print("[WARN] No edges found in GFA. Skipping similarity computation.")
